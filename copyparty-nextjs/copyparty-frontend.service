@@ -1,0 +1,45 @@
+# Systemd service file for CopyParty Next.js Frontend
+# Copy this file to /etc/systemd/system/copyparty-frontend.service
+# and edit the paths and user as needed
+
+[Unit]
+Description=CopyParty Next.js Frontend
+Documentation=https://github.com/your-repo/copyparty-nextjs
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+
+# IMPORTANT: Update this path to your actual installation directory
+WorkingDirectory=/path/to/copyparty-nextjs
+
+# Environment variables
+Environment="NODE_ENV=production"
+Environment="PORT=3000"
+# Uncomment and set if your CopyParty backend is on a different origin
+# Environment="NEXT_PUBLIC_API_URL=http://localhost:3923"
+
+# Start the Next.js server
+ExecStart=/usr/bin/npm start
+
+# Restart policy
+Restart=on-failure
+RestartSec=10
+KillMode=process
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=copyparty-frontend
+
+# Security (optional but recommended)
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/path/to/copyparty-nextjs
+
+[Install]
+WantedBy=multi-user.target

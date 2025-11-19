@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  # CopyParty Next.js Frontend
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: copyparty-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      # Update this to point to your CopyParty backend
+      - NEXT_PUBLIC_API_URL=http://localhost:3923
+    restart: unless-stopped
+    networks:
+      - copyparty-network
+
+networks:
+  copyparty-network:
+    driver: bridge
+
+# If you want to run both frontend and backend together:
+# Uncomment the sections below and adjust paths/volumes as needed
+
+# services:
+#   copyparty:
+#     image: copyparty/copyparty:latest
+#     container_name: copyparty-backend
+#     ports:
+#       - "3923:3923"
+#     volumes:
+#       - ./data:/data
+#       - ./config:/config
+#     command: >
+#       --http-only
+#       --cors "http://localhost:3000"
+#       -v /data::r:rw,ed,A
+#     restart: unless-stopped
+#     networks:
+#       - copyparty-network
+#
+#   frontend:
+#     # ... (keep the frontend config above)
+#     depends_on:
+#       - copyparty
